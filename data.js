@@ -10,7 +10,8 @@ const DB_PATH = process.env.DB_PATH || path.join(__dirname, "bookings.db");
 const LINE_CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
 const LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET;
 const MOM_USER_ID = process.env.MOM_USER_ID;
-const JOYCE_ID = process.env.JOYCE_ID || "joyce.ya";
+// JOYCE_ID 必須是 LINE userId，例如 Uxxxxxxxxxxxxxx，不是 LINE 名稱或 LINE ID
+const JOYCE_ID = process.env.JOYCE_ID;
 
 const lineClient = LINE_CHANNEL_ACCESS_TOKEN
   ? new line.Client({ channelAccessToken: LINE_CHANNEL_ACCESS_TOKEN })
