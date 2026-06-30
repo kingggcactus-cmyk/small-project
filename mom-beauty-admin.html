@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>美容後台</title>
+  <link rel="stylesheet" href="mom-beauty-booking.css">
+  <script src="mom-beauty-booking.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">淨美</div>
+        <div>
+          <h1>美容後台</h1>
+          <p class="subtitle">查看客人送出的預約，確認後才算預約成功。</p>
+        </div>
+      </div>
+      <div class="hours">星期一到六 09:00 - 18:00</div>
+    </header>
+
+    <section class="admin-section">
+      <div class="admin-wait-panel">
+        <div class="panel-header">
+          <h2>等待確認清單</h2>
+          <p>客人送出後會先放在這裡，按下確認才算成功。</p>
+        </div>
+        <div class="admin-body">
+          <div class="tools">
+            <p class="summary" id="summary">目前 0 筆預約</p>
+            <button class="clear" type="button" id="clearDone">清除已取消</button>
+          </div>
+          <div class="booking-list" id="bookingList"></div>
+        </div>
+      </div>
+
+      <div class="admin-calendar-panel">
+        <div class="panel-header">
+          <div class="calendar-header-top">
+            <button class="calendar-nav" type="button" id="prevMonth" aria-label="上個月">◀</button>
+            <h2 id="calendarMonth">2024年6月</h2>
+            <button class="calendar-nav" type="button" id="nextMonth" aria-label="下個月">▶</button>
+          </div>
+          <p>已確認的預約日曆視圖</p>
+        </div>
+        <div class="admin-body">
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+      </div>
+
+      <div class="admin-detail-panel">
+        <div class="panel-header">
+          <h2 id="detailDate">選擇日期查看詳情</h2>
+        </div>
+        <div class="admin-body" id="detailContent">
+          <div class="empty">點擊日曆中的日期查看當天預約詳情</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

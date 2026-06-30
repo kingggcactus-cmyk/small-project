@@ -1,0 +1,16 @@
+資料庫初始化失敗： Error: Access denied for user 'mbuser'@'localhost' (using password: YES)
+    at initDb (/Users/wangtingkai/Desktop/small-project/mom-beauty/data.js:18:32)
+    at Object.<anonymous> (/Users/wangtingkai/Desktop/small-project/mom-beauty/data.js:101:1)
+    at Module._compile (node:internal/modules/cjs/loader:1944:14)
+    at Object..js (node:internal/modules/cjs/loader:2084:10)
+    at Module.load (node:internal/modules/cjs/loader:1666:32)
+    at Module._load (node:internal/modules/cjs/loader:1447:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:260:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  code: 'ER_ACCESS_DENIED_ERROR',
+  errno: 1045,
+  sqlState: '28000',
+  sqlMessage: "Access denied for user 'mbuser'@'localhost' (using password: YES)",
+  sql: undefined
+}

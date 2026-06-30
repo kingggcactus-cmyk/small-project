@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>美容預約</title>
+  <link rel="stylesheet" href="mom-beauty-booking.css">
+  <script src="mom-beauty-booking.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">淨美</div>
+        <div>
+          <h1>美容預約</h1>
+          <p class="subtitle">送出後會先等待確認，確認後才算預約成功。</p>
+        </div>
+      </div>
+      <div class="hours">星期一到六 09:00 - 18:00</div>
+    </header>
+
+    <section class="layout booking-layout" aria-label="美容預約表單">
+      <article class="panel">
+        <div class="panel-header">
+          <h2>填寫預約</h2>
+          <p>每次服務 1.5 小時。星期日不開放預約。</p>
+        </div>
+
+        <form id="bookingForm">
+          <div class="field">
+            <label for="date">預約日期</label>
+            <input id="date" name="date" type="date" required>
+          </div>
+
+          <div class="field">
+            <label>預約時間</label>
+            <div class="slot-grid" id="slotGrid" aria-label="可預約時段"></div>
+          </div>
+
+          <div class="field">
+            <label for="name">姓名</label>
+            <input id="name" name="name" autocomplete="name" required placeholder="請輸入姓名">
+          </div>
+
+          <div class="field">
+            <label for="contact">手機或 LINE ID</label>
+            <input id="contact" name="contact" autocomplete="tel" required placeholder="媽媽確認時方便聯絡">
+          </div>
+          <div class="field">
+            <label for="memo">備註</label>
+            <div class="note-row">
+            <textarea id="memo" name="memo" placeholder=""></textarea>
+          </div>
+          <button class="primary" type="submit">送出預約</button>
+          <p class="message" id="message" role="status">已收到預約，確認後會再通知您。</p>
+        </form>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
