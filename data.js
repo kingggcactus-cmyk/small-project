@@ -177,10 +177,12 @@ app.post(
   "/webhook",
   lineMiddleware,
   async (req, res) => {
+    console.log("webhook called:", JSON.stringify(req.body, null, 2));
     const events = (req.body && req.body.events) || [];
 
     // Process events asynchronously, but acknowledge quickly
     events.forEach((event) => {
+      console.log("processing event:", event.type);
       (async () => {
         try {
           if (event.type === "message" && event.message && event.message.type === "text") {
