@@ -10,6 +10,7 @@ const DB_PATH = process.env.DB_PATH || path.join(__dirname, "bookings.db");
 const LINE_CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
 const LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET;
 const MOM_USER_ID = process.env.MOM_USER_ID;
+const JOYCE_ID = process.env.JOYCE_ID || "joyce.ya";
 
 const lineClient = LINE_CHANNEL_ACCESS_TOKEN
   ? new line.Client({ channelAccessToken: LINE_CHANNEL_ACCESS_TOKEN })
@@ -97,6 +98,14 @@ app.post("/api/bookings", async (req, res) => {
     }
 
     await saveBooking(req.body);
+
+    if (lineClient) {
+      // 通知 Joyce
+      await lineClient.pushMessage(JOYCE_ID, {
+        type: "text",
+        text: "🎉 有新的預約！"
+      });
+    }
 
     if (LINE_CHANNEL_ACCESS_TOKEN && MOM_USER_ID) {
       const timeText = req.body.time || req.body.slot;
