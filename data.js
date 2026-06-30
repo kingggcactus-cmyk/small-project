@@ -184,12 +184,22 @@ app.post(
       (async () => {
         try {
           if (event.type === "message" && event.message && event.message.type === "text") {
-            // Simple echo / acknowledgement
+            const text = event.message.text.trim().toLowerCase();
             if (lineClient) {
-              await lineClient.replyMessage(event.replyToken, {
-                type: "text",
-                text: "收到您的訊息，謝謝！"
-              });
+              if (text === "userid" || text === "user id" || text === "我的 userid") {
+                const userId = event.source && event.source.userId;
+                await lineClient.replyMessage(event.replyToken, {
+                  type: "text",
+                  text: userId
+                    ? `您的 LINE userId 是：${userId}`
+                    : "抱歉，無法取得您的 userId。"
+                });
+              } else {
+                await lineClient.replyMessage(event.replyToken, {
+                  type: "text",
+                  text: "收到您的訊息，謝謝！"
+                });
+              }
             }
           } else if (event.type === "follow") {
             if (lineClient) {
