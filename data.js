@@ -100,18 +100,30 @@ app.post("/api/bookings", async (req, res) => {
     await saveBooking(req.body);
 
     if (lineClient) {
-      // 通知 Joyce
-      await lineClient.pushMessage(JOYCE_ID, {
-        type: "text",
-        text: "🎉 有新的預約！"
-      });
-    }
+      const pushTasks = [];
+      if (JOYCE_ID) {
+        pushTasks.push(
+          lineClient.pushMessage(JOYCE_ID, {
+            type: "text",
+            text: "🎉 有新的預約！"
+          })
+        );
+      }
+      if (LINE_CHANNEL_ACCESS_TOKEN && MOM_USER_ID) {
+        const timeText = req.body.time || req.body.slot;
+        pushTasks.push(
+          lineClient.pushMessage(MOM_USER_ID, {
+            type: "text",
+            text: `📢 新預約！\n姓名：${req.body.name}\n日期：${req.body.date}\n時間：${timeText}`
+          })
+        );
+      }
 
-    if (LINE_CHANNEL_ACCESS_TOKEN && MOM_USER_ID) {
-      const timeText = req.body.time || req.body.slot;
-      await lineClient.pushMessage(MOM_USER_ID, {
-        type: "text",
-        text: `📢 新預約！\n姓名：${req.body.name}\n日期：${req.body.date}\n時間：${timeText}`
+      const pushResults = await Promise.allSettled(pushTasks);
+      pushResults.forEach((result) => {
+        if (result.status === "rejected") {
+          console.error("LINE push message failed:", result.reason);
+        }
       });
     }
 
