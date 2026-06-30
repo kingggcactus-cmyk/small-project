@@ -11,7 +11,12 @@ const LINE_CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
 const LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET;
 const MOM_USER_ID = process.env.MOM_USER_ID;
 
-const lineClient = new line.Client({ channelAccessToken: LINE_CHANNEL_ACCESS_TOKEN });
+const lineClient = LINE_CHANNEL_ACCESS_TOKEN
+  ? new line.Client({ channelAccessToken: LINE_CHANNEL_ACCESS_TOKEN })
+  : null;
+const lineMiddleware = LINE_CHANNEL_SECRET
+  ? line.middleware({ channelSecret: LINE_CHANNEL_SECRET })
+  : (req, res, next) => next();
 
 let db;
 
@@ -148,7 +153,7 @@ app.delete("/api/bookings/cancelled", async (req, res) => {
 // LINE webhook endpoint
 app.post(
   "/webhook",
-  line.middleware({ channelSecret: LINE_CHANNEL_SECRET }),
+  lineMiddleware,
   async (req, res) => {
     const events = (req.body && req.body.events) || [];
 
@@ -158,15 +163,19 @@ app.post(
         try {
           if (event.type === "message" && event.message && event.message.type === "text") {
             // Simple echo / acknowledgement
-            await lineClient.replyMessage(event.replyToken, {
-              type: "text",
-              text: "收到您的訊息，謝謝！"
-            });
+            if (lineClient) {
+              await lineClient.replyMessage(event.replyToken, {
+                type: "text",
+                text: "收到您的訊息，謝謝！"
+              });
+            }
           } else if (event.type === "follow") {
-            await lineClient.replyMessage(event.replyToken, {
-              type: "text",
-              text: "謝謝您加入淨美，歡迎預約！"
-            });
+            if (lineClient) {
+              await lineClient.replyMessage(event.replyToken, {
+                type: "text",
+                text: "謝謝您加入淨美，歡迎預約！"
+              });
+            }
           }
         } catch (err) {
           console.error("處理 LINE event 失敗：", err);
