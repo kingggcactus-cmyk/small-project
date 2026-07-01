@@ -20,6 +20,16 @@ const lineMiddleware = LINE_CHANNEL_SECRET
   ? line.middleware({ channelSecret: LINE_CHANNEL_SECRET })
   : (req, res, next) => next();
 
+function logLineConfig() {
+  console.log("LINE config:");
+  console.log("  LINE_CHANNEL_ACCESS_TOKEN:", !!LINE_CHANNEL_ACCESS_TOKEN);
+  console.log("  LINE_CHANNEL_SECRET:", !!LINE_CHANNEL_SECRET);
+  console.log("  MOM_USER_ID:", !!MOM_USER_ID);
+  console.log("  JOYCE_ID:", JOYCE_ID ? JOYCE_ID : "<not set>");
+  console.log("  lineClient:", !!lineClient);
+  console.log("  lineMiddleware:", LINE_CHANNEL_SECRET ? "enabled" : "noop");
+}
+
 let db;
 
 async function initDb() {
@@ -75,6 +85,17 @@ app.get("/", (req, res) => {
   res.redirect("/mom-beauty-booking.html");
 });
 
+app.get("/debug/config", (req, res) => {
+  res.json({
+    LINE_CHANNEL_ACCESS_TOKEN: !!LINE_CHANNEL_ACCESS_TOKEN,
+    LINE_CHANNEL_SECRET: !!LINE_CHANNEL_SECRET,
+    MOM_USER_ID: !!MOM_USER_ID,
+    JOYCE_ID: JOYCE_ID || null,
+    lineClient: !!lineClient,
+    lineMiddleware: LINE_CHANNEL_SECRET ? "enabled" : "noop"
+  });
+});
+
 app.get("/api/bookings", async (req, res) => {
   try {
     db.all("SELECT * FROM bookings", (err, rows) => {
@@ -102,14 +123,17 @@ app.post("/api/bookings", async (req, res) => {
 
     if (lineClient) {
       const pushTasks = [];
-      if (JOYCE_ID) {
+      if (JOYCE_ID && JOYCE_ID.startsWith("U")) {
         pushTasks.push(
           lineClient.pushMessage(JOYCE_ID, {
             type: "text",
             text: "🎉 有新的預約！"
           })
         );
+      } else if (JOYCE_ID) {
+        console.warn("JOYCE_ID looks invalid, must start with 'U':", JOYCE_ID);
       }
+
       if (LINE_CHANNEL_ACCESS_TOKEN && MOM_USER_ID) {
         const timeText = req.body.time || req.body.slot;
         pushTasks.push(
@@ -223,8 +247,10 @@ app.post(
 
 initDb()
   .then(() => {
+    logLineConfig();
     app.listen(PORT, () => {
       console.log(`Mom Beauty 後端伺服器啟動： http://localhost:${PORT}`);
+      console.log(`LINE webhook endpoint: http://localhost:${PORT}/webhook`);
     });
   })
   .catch((err) => {
