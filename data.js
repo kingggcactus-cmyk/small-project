@@ -1,7 +1,10 @@
+const dotenv = require("dotenv");
 const express = require("express");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
 const line = require("@line/bot-sdk");
+
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
